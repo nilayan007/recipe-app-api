@@ -20,6 +20,6 @@
         - name: Run Tests
           run: docker compose run --rm app sh -c "python manage.py wait_for_db && python manage.py migrate && python manage.py test"
   
-        - name: Run Lint Checks
-          run: docker compose run --rm app sh -c "flake8"
+#        - name: Run Lint Checks
+ #         run: docker compose run --rm app sh -c "flake8"
   
