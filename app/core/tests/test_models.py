@@ -1,8 +1,8 @@
 """
 test for models
 """
-from django.test import TestCase
-from django.contrib.auth import get_user_model
+from django.test import TestCase # type: ignore
+from django.contrib.auth import get_user_model # type: ignore
 
 class ModelTest(TestCase):
     """test models"""
@@ -15,3 +15,27 @@ class ModelTest(TestCase):
         )
         self.assertEqual(user.email, email)
         self.assertTrue(user.check_password(password))
+
+    def test_new_user_email_normalized(self):
+        sample_emails = [
+            ['test1@EXAMPLE.com','test1@example.com'],
+            ['Test2@Example.com','Test2@example.com'],
+            ['TEST3@EXAMPLE.COM','TEST3@example.com'],
+            ['test4@example.COM','test4@example.com'],
+        ]
+        for email, expected in sample_emails:
+            user = get_user_model().objects.create_user(email,'sample123')
+            self.assertEqual(user.email, expected)
+
+    def test_new_user_without_email_raise_error(self):
+        with self.assertRaises(ValueError):
+            get_user_model().objects.create_user('','sample1124')
+
+
+    def test_create_superuser(self):
+        user = get_user_model().objects.create_superuser(
+            'test1@example.com',
+            'test123'
+        )
+        self.assertTrue(user.is_superuser)
+        self.assertTrue(user.is_staff)
